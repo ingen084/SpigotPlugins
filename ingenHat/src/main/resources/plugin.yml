@@ -1,0 +1,4 @@
+name: IngenHat
+version: ${project.version}
+main: net.ingen084.spigot.hat.IngenHat
+api-version: 1.13
