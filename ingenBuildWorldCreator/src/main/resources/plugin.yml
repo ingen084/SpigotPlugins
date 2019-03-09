@@ -1,0 +1,5 @@
+name: IngenBeadrockLevelator
+load: STARTUP
+version: ${project.version}
+main: net.ingen084.spigot.bedrocklevelator.BedrockLevelator
+api-version: 1.13
