@@ -1,0 +1,4 @@
+name: IngenCustomCartSpeed
+version: ${project.version}
+main: net.ingen084.bukkit.ingencustomcartspeed.IngenCustomCartSpeed
+api-version: 1.13
