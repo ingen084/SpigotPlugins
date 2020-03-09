@@ -1,9 +1,12 @@
 package net.ingen084.bukkit.ingencustomcartspeed;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -12,6 +15,7 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
@@ -40,7 +44,8 @@ public class VehicleSpeedChecker implements Listener {
         new BukkitRunnable() {
             public void run() {
                 for (Minecart cart : CartSpeeds.keySet()) {
-                    if (cart.getWorld() == CartPrevPos.get(cart).getWorld())
+                    World world = cart.getWorld();
+                    if (CartPrevPos.containsKey(cart) && world == CartPrevPos.get(cart).getWorld())
                         CartSpeeds.put(cart, CartPrevPos.get(cart).distance(cart.getLocation()));
                     else
                         CartSpeeds.put(cart, 0d);
@@ -75,7 +80,7 @@ public class VehicleSpeedChecker implements Listener {
     public void OnCreateMinecart(VehicleCreateEvent e) {
         if (!(e.getVehicle() instanceof Minecart))
             return;
-
+        
         if (!CartSpeeds.containsKey(e.getVehicle()))
             CartSpeeds.put((Minecart) e.getVehicle(), 0d);
         if (!CartPrevPos.containsKey(e.getVehicle()))
@@ -99,10 +104,23 @@ public class VehicleSpeedChecker implements Listener {
     }
 
     @EventHandler
+    public void OnEnterPortalMinecart(EntityPortalEvent e) {
+        if (!(e.getEntity() instanceof Minecart))
+            return;
+        
+        Minecart cart = (Minecart)e.getEntity();
+
+        if (CartSpeeds.containsKey(cart))
+            CartSpeeds.remove(cart);
+        if (CartPrevPos.containsKey(cart))
+            CartPrevPos.remove(cart);
+    }
+
+    @EventHandler
     public void OnDestroyMinecart(VehicleDestroyEvent e) {
         if (!(e.getVehicle() instanceof Minecart))
             return;
-
+        
         if (CartSpeeds.containsKey(e.getVehicle()))
             CartSpeeds.remove(e.getVehicle());
         if (CartPrevPos.containsKey(e.getVehicle()))
