@@ -1,0 +1,4 @@
+name: IngenNether
+version: ${project.version}
+main: net.ingen084.spigot.nether.IngenNether
+api-version: 1.17
